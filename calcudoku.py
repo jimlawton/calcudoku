@@ -123,14 +123,14 @@ def generateOutput(n, values, debug=False):
     output[result]["Never"] = getPacked(never)
   return output
 
-def generateLinearCombinations(n, i):
+def generateLinearCombinations(n, i, debug=False):
   numberset = set(i for i in range(1, n+1))
   combs = list(itertools.combinations(numberset, i))
   if debug:
     print " combs:", combs
   return combs
 
-def generateIrregularCombinations(n, i):
+def generateIrregularCombinations(n, i, debug=False):
   combs = generateLinearCombinations(n, i)
   lcombs = []
   for subset in combs:
@@ -138,6 +138,8 @@ def generateIrregularCombinations(n, i):
     if subset[0] == subset[1] and subset[1] == subset[2]:
       continue
     lcombs.append(subset)
+  if debug:
+    print " irregular combs:", lcombs
   return lcombs
 
 def calculateOutput(n, op=None, debug=False):
@@ -147,63 +149,63 @@ def calculateOutput(n, op=None, debug=False):
   for i in range(2, n+1):
     if debug:
       print " cage size:", i
-    linearcombs = generateLinearCombinations(n, i)
+    linearcombs = generateLinearCombinations(n, i, debug=debug)
   
     output[i] = {}
     
     if op == None or op == '+':
       if debug:
         print "  linear sums..."
-      sums = calculate(operator.add, linearcombs)
+      sums = calculate(operator.add, linearcombs, debug=debug)
       if debug:
         print "  sums:", sums
-      output[i]["+"] = generateOutput(n, sums)
+      output[i]["+"] = generateOutput(n, sums, debug=debug)
   
       if i > 2:
         if debug:
           print "  L-shaped sums..."
         # L-shaped cages...
-        lcombs = generateIrregularCombinations(n, i)
-        lsums = calculate(operator.add, lcombs)
+        lcombs = generateIrregularCombinations(n, i, debug=debug)
+        lsums = calculate(operator.add, lcombs, debug=debug)
         if debug:
           print "  lsums:", lsums
-        output[i]["+L"] = generateOutput(n, lsums)
+        output[i]["+L"] = generateOutput(n, lsums, debug=debug)
     
     if op == None or op == '-':
       if i == 2:
         if debug:
           print "  linear differences..."
-        diffs = calculate(operator.sub, linearcombs)
+        diffs = calculate(operator.sub, linearcombs, debug=debug)
         if debug:
           print "  diffs:", diffs
-        output[i]["-"] = generateOutput(n, diffs)
+        output[i]["-"] = generateOutput(n, diffs, debug=debug)
     
     if op == None or op == 'x':
       if debug:
         print "  linear products..."
-      prods = calculate(operator.mul, linearcombs)
+      prods = calculate(operator.mul, linearcombs, debug=debug)
       if debug:
         print "  prods:", prods
-      output[i]["x"] = generateOutput(n, prods)
+      output[i]["x"] = generateOutput(n, prods, debug=debug)
       
       if i == 3:
         if debug:
           print "  L-shaped products..."
         # L-shaped cages...
-        lcombs = generateIrregularCombinations(n, i)
-        lprods = calculate(operator.mul, lcombs)
+        lcombs = generateIrregularCombinations(n, i, debug=debug)
+        lprods = calculate(operator.mul, lcombs, debug=debug)
         if debug:
           print "  lprods:", lprods
-        output[i]["xL"] = generateOutput(n, lprods)
+        output[i]["xL"] = generateOutput(n, lprods, debug=debug)
   
     if op == None or op == ':':
       if i == 2:
         if debug:
           print "  linear divisions..."
-        divs = calculate(operator.div, linearcombs)
+        divs = calculate(operator.div, linearcombs, debug=debug)
         if debug:
           print "  divs:", divs
-        output[i][":"] = generateOutput(n, divs)
+        output[i][":"] = generateOutput(n, divs, debug=debug)
   if debug:
     print "  output:", output
   return output
