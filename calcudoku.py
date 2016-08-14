@@ -99,15 +99,13 @@ def getPacked(values):
 
 def printValues(n, op, values, always=None, never=None):
   vals = values.keys()
-  if len(vals) > 2:
-    vals.sort()
-    print "n=%d%s" % (n, op),
-    for result in vals:
-      print "%d:%s" % (result, getPacked(values[result])),
-      if always and always[result]:
-        print "y=%s" % getPacked(always[result]),
-      if never and never[result]:
-        print "n=%s" % getPacked(never[result]),
+  print "n=%d%s" % (n, op),
+  for result in vals:
+    print "%d:%s" % (result, getPacked(values[result])),
+    if always and always[result]:
+      print "y=%s" % getPacked(always[result]),
+    if never and never[result]:
+      print "n=%s" % getPacked(never[result]),
     print
 
 def generateOutput(n, values, debug=False):
