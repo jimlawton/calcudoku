@@ -111,8 +111,10 @@ def printValues(n, op, values, always=None, never=None):
         print "n=%s" % getPacked(never[result]),
     print
 
-def generateOutput(n, values):
+def generateOutput(n, values, debug=False):
   output = {}
+  if debug:
+    print "  values:", values
   vals = values.keys()
   if len(vals) > 2:
     vals.sort()
@@ -196,6 +198,8 @@ def calculateOutput(n, op=None, debug=False):
         if debug:
           print "  divs:", divs
         output[i][":"] = generateOutput(n, divs)
+  if debug:
+    print "  output:", output
   return output
 
 def saveOutput(n, output, onlyType=None, debug=False):
