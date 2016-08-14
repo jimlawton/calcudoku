@@ -116,7 +116,37 @@ def generateOutput(n, values):
       never = getNever(n, values[result])
       output[result]["Never"] = getPacked(never)
   return output
-  
+
+def saveOutput(n, output, rowtype=None):
+  if rowtype == "+":
+    csvout = csv.writer(open('calcudoku_%d_sums.csv' % n, 'wb'))
+  elif rowtype == "-":
+    csvout = csv.writer(open('calcudoku_%d_diffs.csv' % n, 'wb'))
+  elif rowtype == "x":
+    csvout = csv.writer(open('calcudoku_%d_prods.csv' % n, 'wb'))
+  elif rowtype == ":":
+    csvout = csv.writer(open('calcudoku_%d_divs.csv' % n, 'wb'))
+  else:
+    csvout = csv.writer(open('calcudoku_%d.csv' % n, 'wb'))
+  csvout.writerow(['Type', 'Result', 'Values', 'Always', 'Never'])
+  for i in range(2, n+1):
+    if i == 2:
+      rowtypes = [ "+", "-", "x", ":" ]
+    elif i == 3:
+      rowtypes = [ "+", "+L", "x", "xL" ]
+    else:
+      rowtypes = [ "+", "x" ]
+    for rowtype in rowtypes:
+      results = output[i][rowtype].keys()
+      results.sort()
+      for result in results:
+        row = [i, "%d%s" % (result, rowtype)]
+        row.append(output[i][rowtype][result]["Values"])
+        row.append(output[i][rowtype][result]["Always"])
+        row.append(output[i][rowtype][result]["Never"])
+        csvout.writerow(row)
+
+
 # Main starts here.
 
 NMIN = 6
@@ -169,23 +199,6 @@ for n in range(NMIN, NMAX+1):
       divs = calculate(operator.div, linearcombs)
       output[i][":"] = generateOutput(n, divs)
     
-  csvout = csv.writer(open('calcudoku_%d.csv' % n, 'wb'))
-  csvout.writerow(['Type', 'Result', 'Values', 'Always', 'Never'])
-  for i in range(2, n+1):
-    if i == 2:
-      rowtypes = [ "+", "-", "x", ":" ]
-    elif i == 3:
-      rowtypes = [ "+", "+L", "x", "xL" ]
-    else:
-      rowtypes = [ "+", "x" ]
-    for rowtype in rowtypes:
-      results = output[i][rowtype].keys()
-      results.sort()
-      for result in results:
-        row = [i, "%d%s" % (result, rowtype)]
-        row.append(output[i][rowtype][result]["Values"])
-        row.append(output[i][rowtype][result]["Always"])
-        row.append(output[i][rowtype][result]["Never"])
-        csvout.writerow(row)
+  saveOutput(n, output)
 
 print "Done!"
