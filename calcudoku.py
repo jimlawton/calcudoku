@@ -149,6 +149,8 @@ def calculateOutput(n, op=None, debug=False):
       if debug:
         print "  linear sums..."
       sums = calculate(operator.add, linearcombs)
+      if debug:
+        print "  sums:", sums
       output[i]["+"] = generateOutput(n, sums)
   
       if i == 3:
@@ -156,6 +158,8 @@ def calculateOutput(n, op=None, debug=False):
           print "  L-shaped sums..."
         # L-shaped cages...
         lsums = calculate(operator.add, lcombs)
+        if debug:
+          print "  lsums:", lsums
         output[i]["+L"] = generateOutput(n, lsums)
     
     if op == None or op == '-':
@@ -163,12 +167,16 @@ def calculateOutput(n, op=None, debug=False):
         if debug:
           print "  linear differences..."
         diffs = calculate(operator.sub, linearcombs)
+        if debug:
+          print "  diffs:", diffs
         output[i]["-"] = generateOutput(n, diffs)
     
     if op == None or op == 'x':
       if debug:
         print "  linear products..."
       prods = calculate(operator.mul, linearcombs)
+      if debug:
+        print "  prods:", prods
       output[i]["x"] = generateOutput(n, prods)
       
       if i == 3:
@@ -176,6 +184,8 @@ def calculateOutput(n, op=None, debug=False):
           print "  L-shaped products..."
         # L-shaped cages...
         lprods = calculate(operator.mul, lcombs)
+        if debug:
+          print "  lprods:", lprods
         output[i]["xL"] = generateOutput(n, lprods)
   
     if op == None or op == ':':
@@ -183,6 +193,8 @@ def calculateOutput(n, op=None, debug=False):
         if debug:
           print "  linear divisions..."
         divs = calculate(operator.div, linearcombs)
+        if debug:
+          print "  divs:", divs
         output[i][":"] = generateOutput(n, divs)
   return output
 
