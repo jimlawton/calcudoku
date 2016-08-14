@@ -205,4 +205,3 @@ for n in range(NMIN, NMAX+1):
   if n == 9:
     saveOutput(n, output, "+")
 
-print "Done!"
