@@ -126,7 +126,8 @@ def generateOutput(n, values, debug=False):
   return output
 
 def calculateOutput(n, op=None, debug=False):
-  print "Calculating, n=%d" % n
+  if debug:
+    print "Calculating, n=%d" % n
   numberset = set(i for i in range(1, n+1))
   output = {}
   for i in range(2, n+1):
