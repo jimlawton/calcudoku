@@ -117,14 +117,14 @@ def generateOutput(n, values):
       output[result]["Never"] = getPacked(never)
   return output
 
-def saveOutput(n, output, rowtype=None):
-  if rowtype == "+":
+def saveOutput(n, output, onlyType=None):
+  if onlyType == "+":
     csvout = csv.writer(open('calcudoku_%d_sums.csv' % n, 'wb'))
-  elif rowtype == "-":
+  elif onlyType == "-":
     csvout = csv.writer(open('calcudoku_%d_diffs.csv' % n, 'wb'))
-  elif rowtype == "x":
+  elif onlyType == "x":
     csvout = csv.writer(open('calcudoku_%d_prods.csv' % n, 'wb'))
-  elif rowtype == ":":
+  elif onlyType == ":":
     csvout = csv.writer(open('calcudoku_%d_divs.csv' % n, 'wb'))
   else:
     csvout = csv.writer(open('calcudoku_%d.csv' % n, 'wb'))
@@ -137,6 +137,8 @@ def saveOutput(n, output, rowtype=None):
     else:
       rowtypes = [ "+", "x" ]
     for rowtype in rowtypes:
+      if onlyType != None and rowtype != onlyType:
+        continue
       results = output[i][rowtype].keys()
       results.sort()
       for result in results:
