@@ -202,5 +202,7 @@ for n in range(NMIN, NMAX+1):
       output[i][":"] = generateOutput(n, divs)
     
   saveOutput(n, output)
+  if n == 9:
+    saveOutput(n, output, "+")
 
 print "Done!"
