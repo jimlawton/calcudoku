@@ -119,13 +119,16 @@ def generateOutput(n, values):
       output[result]["Never"] = getPacked(never)
   return output
 
-def calculateOutput(n, op=None):
+def calculateOutput(n, op=None, debug=False):
   print "Calculating, n=%d" % n
   numberset = set(i for i in range(1, n+1))
   output = {}
   for i in range(2, n+1):
-    #print " cage size:", i
+    if debug:
+      print " cage size:", i
     linearcombs = list(itertools.combinations(numberset, i))
+    if debug:
+      print " linearcombs:", linearcombs
     lcombs = list(combinations_with_replacement(numberset, 3))
     lcombs2 = []
     for subset in lcombs:
@@ -137,41 +140,47 @@ def calculateOutput(n, op=None):
     output[i] = {}
     
     if op == None or op == '+':
-      #print "  linear sums..."
+      if debug:
+        print "  linear sums..."
       sums = calculate(operator.add, linearcombs)
       output[i]["+"] = generateOutput(n, sums)
   
       if i == 3:
-        #print "  L-shaped sums..."
+        if debug:
+          print "  L-shaped sums..."
         # L-shaped cages...
         lsums = calculate(operator.add, lcombs)
         output[i]["+L"] = generateOutput(n, lsums)
     
     if op == None or op == '-':
       if i == 2:
-        #print "  linear differences..."
+        if debug:
+          print "  linear differences..."
         diffs = calculate(operator.sub, linearcombs)
         output[i]["-"] = generateOutput(n, diffs)
     
     if op == None or op == 'x':
-      #print "  linear products..."
+      if debug:
+        print "  linear products..."
       prods = calculate(operator.mul, linearcombs)
       output[i]["x"] = generateOutput(n, prods)
       
       if i == 3:
-        #print "  L-shaped products..."
+        if debug:
+          print "  L-shaped products..."
         # L-shaped cages...
         lprods = calculate(operator.mul, lcombs)
         output[i]["xL"] = generateOutput(n, lprods)
   
     if op == None or op == ':':
       if i == 2:
-        #print "  linear divisions..."
+        if debug:
+          print "  linear divisions..."
         divs = calculate(operator.div, linearcombs)
         output[i][":"] = generateOutput(n, divs)
   return output
 
-def saveOutput(n, output, onlyType=None):
+def saveOutput(n, output, onlyType=None, debug=False):
   if onlyType == "+":
     csvout = csv.writer(open('calcudoku_%d_sums.csv' % n, 'wb'))
   elif onlyType == "-":
@@ -206,6 +215,7 @@ def saveOutput(n, output, onlyType=None):
 # Main starts here.
 
 parser = argparse.ArgumentParser(description='Sudoku calculator.')
+parser.add_argument('-d', '--debug', dest="debug", action="store_true", default=False, help='Print debugging information.')
 parser.add_argument('--all', dest="all", action="store_true", default=False, help='Calculate all tables.')
 parser.add_argument('size', nargs='?', default=9, help='Specify the Sudoku size (max digit, default=9)')
 parser.add_argument('op', nargs='?', default='+', help='Specify the operation (default is "+")')
@@ -218,10 +228,10 @@ NMAX = 9
 
 if args.all:
   for n in range(NMIN, NMAX+1):
-    output = calculateOutput(n)
+    output = calculateOutput(n, debug=args.debug)
     saveOutput(n, output)
     if n == 9:
-      saveOutput(n, output, "+")
+      saveOutput(n, output, "+", debug=args.debug)
 else:
-    output = calculateOutput(args.size, args.op)
+    output = calculateOutput(args.size, args.op, debug=args.debug)
     pprint.pprint(output)
