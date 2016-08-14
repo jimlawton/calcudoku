@@ -260,4 +260,10 @@ else:
       cage = output[args.cage]
       for op in cage.keys():
         if args.value in cage[op].keys():
-          pprint.pprint(output[args.cage][op][args.value])
+          print "%3s:" % op,
+          print output[args.cage][op][args.value]['Values'],
+          if output[args.cage][op][args.value]['Always'] != '':
+              print "always:", output[args.cage][op][args.value]['Always'],
+          if output[args.cage][op][args.value]['Never'] != '':
+              print "never:", output[args.cage][op][args.value]['Never'],
+          print
