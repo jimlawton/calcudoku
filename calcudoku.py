@@ -123,24 +123,31 @@ def generateOutput(n, values, debug=False):
     output[result]["Never"] = getPacked(never)
   return output
 
+def generateLinearCombinations(n, i):
+  numberset = set(i for i in range(1, n+1))
+  combs = list(itertools.combinations(numberset, i))
+  if debug:
+    print " combs:", combs
+  return combs
+
+def generateIrregularCombinations(n, i):
+  combs = generateLinearCombinations(n, i)
+  lcombs = []
+  for subset in combs:
+    # TODO This only works for a cage size of 3?
+    if subset[0] == subset[1] and subset[1] == subset[2]:
+      continue
+    lcombs.append(subset)
+  return lcombs
+
 def calculateOutput(n, op=None, debug=False):
   if debug:
     print "Calculating, n=%d" % n
-  numberset = set(i for i in range(1, n+1))
   output = {}
   for i in range(2, n+1):
     if debug:
       print " cage size:", i
-    linearcombs = list(itertools.combinations(numberset, i))
-    if debug:
-      print " linearcombs:", linearcombs
-    lcombs = list(combinations_with_replacement(numberset, 3))
-    lcombs2 = []
-    for subset in lcombs:
-      if subset[0] == subset[1] and subset[1] == subset[2]:
-        continue
-      lcombs2.append(subset)
-    lcombs = lcombs2
+    linearcombs = generateLinearCombinations(n, i)
   
     output[i] = {}
     
@@ -152,10 +159,11 @@ def calculateOutput(n, op=None, debug=False):
         print "  sums:", sums
       output[i]["+"] = generateOutput(n, sums)
   
-      if i == 3:
+      if i > 2:
         if debug:
           print "  L-shaped sums..."
         # L-shaped cages...
+        lcombs = generateIrregularCombinations(n, i)
         lsums = calculate(operator.add, lcombs)
         if debug:
           print "  lsums:", lsums
@@ -182,6 +190,7 @@ def calculateOutput(n, op=None, debug=False):
         if debug:
           print "  L-shaped products..."
         # L-shaped cages...
+        lcombs = generateIrregularCombinations(n, i)
         lprods = calculate(operator.mul, lcombs)
         if debug:
           print "  lprods:", lprods
