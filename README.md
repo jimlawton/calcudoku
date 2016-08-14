@@ -1,2 +1,2 @@
 # calcudoku
-Calculate Sudoku/Calcudoku tables
+Calculate Sudoku/Calcudoku/Killer Sudoku tables.
