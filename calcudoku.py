@@ -6,6 +6,7 @@ import pprint
 import operator
 import csv
 import argparse
+import pprint
 
 def combinations_with_replacement(iterable, r):
   pool = tuple(iterable)
@@ -223,4 +224,4 @@ if args.all:
       saveOutput(n, output, "+")
 else:
     output = calculateOutput(args.size, args.op)
-    print output
+    pprint.pprint(output)
