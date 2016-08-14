@@ -5,6 +5,7 @@ import itertools
 import pprint
 import operator
 import csv
+import argparse
 
 def combinations_with_replacement(iterable, r):
   pool = tuple(iterable)
@@ -150,6 +151,14 @@ def saveOutput(n, output, onlyType=None):
 
 
 # Main starts here.
+
+parser = argparse.ArgumentParser(description='Sudoku calculator.')
+parser.add_argument('--all', dest="all", action="store_true", default=False, help='Calculate all tables.')
+parser.add_argument('size', nargs='?', default=9, help='Specify the Sudoku size (max digit, default=9)')
+parser.add_argument('op', nargs='?', default='+', help='Specify the operation (default is "+")')
+parser.add_argument('value', nargs='?', default=0, help='Specify the value for the operation.')
+
+args = parser.parse_args()
 
 NMIN = 6
 NMAX = 9
