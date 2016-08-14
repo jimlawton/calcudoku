@@ -118,6 +118,58 @@ def generateOutput(n, values):
       output[result]["Never"] = getPacked(never)
   return output
 
+def calculateOutput(n, op=None):
+  print "Calculating, n=%d" % n
+  numberset = set(i for i in range(1, n+1))
+  output = {}
+  for i in range(2, n+1):
+    #print " cage size:", i
+    linearcombs = list(itertools.combinations(numberset, i))
+    lcombs = list(combinations_with_replacement(numberset, 3))
+    lcombs2 = []
+    for subset in lcombs:
+      if subset[0] == subset[1] and subset[1] == subset[2]:
+        continue
+      lcombs2.append(subset)
+    lcombs = lcombs2
+  
+    output[i] = {}
+    
+    if op == None or op == '+':
+      #print "  linear sums..."
+      sums = calculate(operator.add, linearcombs)
+      output[i]["+"] = generateOutput(n, sums)
+  
+      if i == 3:
+        #print "  L-shaped sums..."
+        # L-shaped cages...
+        lsums = calculate(operator.add, lcombs)
+        output[i]["+L"] = generateOutput(n, lsums)
+    
+    if op == None or op == '-':
+      if i == 2:
+        #print "  linear differences..."
+        diffs = calculate(operator.sub, linearcombs)
+        output[i]["-"] = generateOutput(n, diffs)
+    
+    if op == None or op == 'x':
+      #print "  linear products..."
+      prods = calculate(operator.mul, linearcombs)
+      output[i]["x"] = generateOutput(n, prods)
+      
+      if i == 3:
+        #print "  L-shaped products..."
+        # L-shaped cages...
+        lprods = calculate(operator.mul, lcombs)
+        output[i]["xL"] = generateOutput(n, lprods)
+  
+    if op == None or op == ':':
+      if i == 2:
+        #print "  linear divisions..."
+        divs = calculate(operator.div, linearcombs)
+        output[i][":"] = generateOutput(n, divs)
+  return output
+
 def saveOutput(n, output, onlyType=None):
   if onlyType == "+":
     csvout = csv.writer(open('calcudoku_%d_sums.csv' % n, 'wb'))
@@ -163,54 +215,12 @@ args = parser.parse_args()
 NMIN = 6
 NMAX = 9
 
-for n in range(NMIN, NMAX+1):
-  print "Calculating, n=%d" % n
-  numberset = set(i for i in range(1, n+1))
-  output = {}
-  for i in range(2, n+1):
-    #print " cage size:", i
-    linearcombs = list(itertools.combinations(numberset, i))
-    lcombs = list(combinations_with_replacement(numberset, 3))
-    lcombs2 = []
-    for subset in lcombs:
-      if subset[0] == subset[1] and subset[1] == subset[2]:
-        continue
-      lcombs2.append(subset)
-    lcombs = lcombs2
-  
-    output[i] = {}
-    
-    #print "  linear sums..."
-    sums = calculate(operator.add, linearcombs)
-    output[i]["+"] = generateOutput(n, sums)
-  
-    if i == 3:
-      #print "  L-shaped sums..."
-      # L-shaped cages...
-      lsums = calculate(operator.add, lcombs)
-      output[i]["+L"] = generateOutput(n, lsums)
-    
-    if i == 2:
-      #print "  linear differences..."
-      diffs = calculate(operator.sub, linearcombs)
-      output[i]["-"] = generateOutput(n, diffs)
-    
-    #print "  linear products..."
-    prods = calculate(operator.mul, linearcombs)
-    output[i]["x"] = generateOutput(n, prods)
-      
-    if i == 3:
-      #print "  L-shaped products..."
-      # L-shaped cages...
-      lprods = calculate(operator.mul, lcombs)
-      output[i]["xL"] = generateOutput(n, lprods)
-  
-    if i == 2:
-      #print "  linear divisions..."
-      divs = calculate(operator.div, linearcombs)
-      output[i][":"] = generateOutput(n, divs)
-    
-  saveOutput(n, output)
-  if n == 9:
-    saveOutput(n, output, "+")
-
+if args.all:
+  for n in range(NMIN, NMAX+1):
+    output = calculateOutput(n)
+    saveOutput(n, output)
+    if n == 9:
+      saveOutput(n, output, "+")
+else:
+    output = calculateOutput(args.size, args.op)
+    print output
