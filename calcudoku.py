@@ -255,5 +255,11 @@ if args.all:
     if n == 9:
       saveOutput(n, output, "+", debug=args.debug)
 else:
-    output = calculateOutput(int(args.size), args.op, debug=args.debug)
-    pprint.pprint(output[int(args.cage)])
+    output = calculateOutput(args.size, args.op, debug=args.debug)
+    if args.value == 0:
+      pprint.pprint(output[args.cage])
+    else:
+      cage = output[args.cage]
+      for op in cage.keys():
+        if args.value in cage[op].keys():
+          pprint.pprint(output[args.cage][op][args.value])
