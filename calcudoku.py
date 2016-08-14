@@ -116,15 +116,14 @@ def generateOutput(n, values, debug=False):
   if debug:
     print "  values:", values
   vals = values.keys()
-  if len(vals) > 2:
-    vals.sort()
-    for result in vals:
-      output[result] = {}
-      output[result]["Values"] = getPacked(values[result])
-      always = getAlways(values[result])
-      output[result]["Always"] = getPacked(always)
-      never = getNever(n, values[result])
-      output[result]["Never"] = getPacked(never)
+  vals.sort()
+  for result in vals:
+    output[result] = {}
+    output[result]["Values"] = getPacked(values[result])
+    always = getAlways(values[result])
+    output[result]["Always"] = getPacked(always)
+    never = getNever(n, values[result])
+    output[result]["Never"] = getPacked(never)
   return output
 
 def calculateOutput(n, op=None, debug=False):
