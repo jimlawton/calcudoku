@@ -36,9 +36,11 @@ class PackedDigits(object):
   def values(self):
       return self._values
 
-def calculate(op, combs):
+def calculate(op, combs, debug=False):
   results = {}
   for subset in combs:
+    if debug:
+      print "subset:", subset
     if op == operator.div:
       sublist = list(subset)
       sublist.reverse()
@@ -47,6 +49,8 @@ def calculate(op, combs):
         continue
       subset = sublist
     subresult = reduce(op, subset)
+    if debug:
+      print "subresult:", subresult
     if op == operator.sub:
       if subresult < 0:
         subresult = -subresult
@@ -54,6 +58,8 @@ def calculate(op, combs):
       results[subresult].append(subset)
     else:
       results[subresult] = [subset]
+    if debug:
+      print "results:", results
   return results
 
 def getValueSet(values):
