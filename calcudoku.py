@@ -217,7 +217,8 @@ def saveOutput(n, output, onlyType=None, debug=False):
 parser = argparse.ArgumentParser(description='Sudoku calculator.')
 parser.add_argument('-d', '--debug', dest="debug", action="store_true", default=False, help='Print debugging information.')
 parser.add_argument('--all', dest="all", action="store_true", default=False, help='Calculate all tables.')
-parser.add_argument('size', nargs='?', default=9, help='Specify the Sudoku size (max digit, default=9)')
+parser.add_argument('-s', '--size', dest="size", default=9, help='Specify the Sudoku size (max digit, default=9)')
+parser.add_argument('cage', help='Specify the cage size')
 parser.add_argument('op', nargs='?', default='+', help='Specify the operation (default is "+")')
 parser.add_argument('value', nargs='?', default=0, help='Specify the value for the operation.')
 
@@ -233,5 +234,5 @@ if args.all:
     if n == 9:
       saveOutput(n, output, "+", debug=args.debug)
 else:
-    output = calculateOutput(args.size, args.op, debug=args.debug)
-    pprint.pprint(output)
+    output = calculateOutput(int(args.size), args.op, debug=args.debug)
+    pprint.pprint(output[int(args.cage)])
